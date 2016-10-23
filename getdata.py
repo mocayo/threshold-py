@@ -6,10 +6,10 @@ from sqlconnect import MSSQL
 
 # 获取所有的表名
 def  getAllTable():
-	sql = "SELECT * FROM LCRiver_xwdh_1.dbo.DefTableType"
+	sql = "SELECT [table] FROM LCRiver_xwdh_1.dbo.DefTableType"
 	ms = MSSQL()
 	resList = ms.ExecQuery(sql)
-	return [str(res[1]).strip() for res in resList]
+	return [str(res[0]).strip() for res in resList]
 
 # 根据测点返回对应表名	
 def getTableByPoint(point='C4-A29-PL-01'):
@@ -52,6 +52,7 @@ def dumpPointData(table='T_ZB_PL_RES1',point='C4-A22-PL-01',component='r1'):
 	return resList
 
 def main():
+	print getAllTable()
 	# dumpPointData(table='T_ZB_JZ_RES1',point='C4-A09-J-01',component='r1')
 
 if __name__ == '__main__':
