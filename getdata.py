@@ -20,6 +20,7 @@ def getTableByPoint(point='C4-A29-PL-01'):
 	resList =  ms.ExecQuery(sql)
 	return "".join(resList[0]).strip()
 
+# 根据表名获取分量
 def getCompByTable(table='T_ZB_PL'):
 	sql = "SELECT R1,R2,R3 FROM LCRiver_xwdh_1.dbo.MonitorItemType "
 	sql += "WHERE TABLE_NAME = '" + table.strip() + "'"
@@ -28,32 +29,45 @@ def getCompByTable(table='T_ZB_PL'):
 	resList = ms.ExecQuery(sql)
 	return resList[0]
 
-def getRByComp(comps,comp):
-	for i in range(len(comps)):
-		if comp == comps[i]:
-			return 'r' + str(i+1)
-	return None
+# 获取指定表的所有测点
+def getPointsByTable(table='T_ZB_PL'):
+	if table=='T_ZB_3DLASER':
+		return
+	sql = "SELECT DISTINCT(INSTR_NO) FROM LCRiver_xwdh_2.dbo." + table.strip()
 
-def getRByPoint(point,comp):
-	table = getTableByPoint(point)
-	comps = getCompByTable(table)
-	return getRByComp(comps,comp)
-
-def dumpPointData(table='T_ZB_PL_RES1',point='C4-A22-PL-01',component='r1'):
-	sql = "SELECT DISTINCT	DT,	WL,	realVal FROM LCRiver_xwdh_3.dbo." + table
-	sql += " WHERE INSTR_NO = '" + point + "' AND component = '" + component + "'"
- 	
 	ms = MSSQL()
-	print sql
-	resList =  ms.ExecQuery(sql)
+	resList = ms.ExecQuery(sql)
+	return [''.join(res).strip() for res in resList]
 
-	output = open(point + '%' + component + '.pkl', 'wb')
-	pickle.dump(resList, output)
-	return resList
+# def insert(key, value, types='comps'):
+# 	sql = "INSERT INTO LCRiver_xwdh_2.dbo.ThresholdInfo([key],[value],[type]) "
+# 	sql += "VALUES ('" + key + "', '" + value + "', '" +  types + "')"
+
+# 	ms = MSSQL()
+# 	ms.ExecNonQuery(sql)
+
+# 根据表获取需要计算的分量
+def getCalculatedCompByTable(table='T_ZB_PL'):
+	sql = "SELECT value FROM LCRiver_xwdh_2.dbo.ThresholdInfo "
+	sql += "WHERE [type]='comps' AND [key]='" + table.strip() + "'"
+	ms = MSSQL()
+	resList = ms.ExecQuery(sql)
+	return [''.join(res).strip() for res in resList]
+
+# 根据测点获取数据
+def getDataByPoint(table='T_ZB_PL', point='C4-A22-PL-01', comp='R2', start='2016-07-01', end='2016-07-07'):
+	sql = "SELECT DT," + comp + " FROM LCRiver_xwdh_2.dbo." + table + " "
+	sql += "WHERE INSTR_NO = '" + point + "' "
+	sql += "AND DT >= '" + start + "' AND DT <= '" + end + "'"
+	ms = MSSQL()
+	resList = ms.ExecQuery(sql)
+	dt = [resList[i][0].strftime('%Y-%m-%d') for i in range(len(resList))]
+	val = [float(resList[i][1]) for i in range(len(resList))]
+	return dt, val
 
 def main():
-	print getAllTable()
-	# dumpPointData(table='T_ZB_JZ_RES1',point='C4-A09-J-01',component='r1')
+	# print getCalculatedCompByTable('T_ZB_UP')
+	print getDataByPoint()
 
 if __name__ == '__main__':
-    main()
+	main()
