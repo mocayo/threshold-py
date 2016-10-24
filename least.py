@@ -43,6 +43,9 @@ def getTimestampByStr(timestr):
 x = [[getTimestampByStr(dt[i]), wl[i]] for i in range(0, split)]
 y = val[0:split]
 
+print x
+print y
+
 train_x = [[getTimestampByStr(dt[i]), wl[i]] for i in range(split, size)]
 real_y = val[split:size]
 
@@ -83,7 +86,7 @@ plt.legend(loc='lower center', bbox_to_anchor=(0.6,0.95),ncol=3,fancybox=True,sh
 plt.yticks(range(0, 100, 5))
 plt.grid()
 
-print train_y[i], real_y[i]
+print train_y, real_y
 print [errrate(train_y[i], real_y[i]) for i in range(0,len(real_y))]
 
 plt.show()
