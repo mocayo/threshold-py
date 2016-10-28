@@ -50,7 +50,7 @@ def getPointsByTable(table='T_ZB_PL'):
 def getCalculatedCompByTable(table='T_ZB_PL'):
 	sql = "SELECT value FROM LCRiver_xwdh_2.dbo.ThresholdInfo "
 	sql += "WHERE [type]='comps' AND [key]='" + table.strip() + "'"
-	ms = MSSQL()
+	ms = MSSQL()	
 	resList = ms.ExecQuery(sql)
 	return [''.join(res).strip() for res in resList]
 
@@ -67,7 +67,8 @@ def getDataByPoint(table='T_ZB_PL', point='C4-A22-PL-01', comp='R2', start='2016
 
 def main():
 	# print getCalculatedCompByTable('T_ZB_UP')
-	print getDataByPoint()
+	# print getDataByPoint()
+	print getPointsByTable('T_ZB_IP')
 
 if __name__ == '__main__':
 	main()
