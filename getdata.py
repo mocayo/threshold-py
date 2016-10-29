@@ -52,14 +52,19 @@ def getCalculatedCompByTable(table='T_ZB_PL'):
 	sql += "WHERE [type]='comps' AND [key]='" + table.strip() + "'"
 	ms = MSSQL()	
 	resList = ms.ExecQuery(sql)
-	return [''.join(res).strip() for res in resList]
+	return ''.join(resList[0]).strip()
 
 # 根据测点获取数据
-def getDataByPoint(table='T_ZB_PL', point='C4-A22-PL-01', comp='R2', start='2016-07-01', end='2016-07-07'):
+def getDataByPoint(point='C4-A22-PL-01', start='2016-07-01', end='2016-07-08'):
+	table = getTableByPoint(point)
+	comp = getCalculatedCompByTable(table)
+	print u'对应表格' , str(table)
+	print u'需要计算的分量', comp
 	sql = "SELECT DT," + comp + " FROM LCRiver_xwdh_2.dbo." + table + " "
 	sql += "WHERE INSTR_NO = '" + point + "' "
-	sql += "AND DT >= '" + start + "' AND DT <= '" + end + "'"
+	sql += "AND DT BETWEEN '" + start + "' AND '" + end + "'"
 	ms = MSSQL()
+	print sql
 	resList = ms.ExecQuery(sql)
 	dt = [resList[i][0].strftime('%Y-%m-%d') for i in range(len(resList))]
 	val = [float(resList[i][1]) for i in range(len(resList))]
@@ -67,8 +72,9 @@ def getDataByPoint(table='T_ZB_PL', point='C4-A22-PL-01', comp='R2', start='2016
 
 def main():
 	# print getCalculatedCompByTable('T_ZB_UP')
-	# print getDataByPoint()
-	print getPointsByTable('T_ZB_IP')
+	print getDataByPoint()
+	# print getPointsByTable('T_ZB_IP')
+
 
 if __name__ == '__main__':
 	main()
