@@ -18,7 +18,8 @@ pl.style.use('ggplot')
 
 def fun(p, x):
 	theta1, theta2, theta3 = p
-	return theta1 + theta2 * np.sin(x) + theta3 * np.exp(x)
+	# return theta1 + theta2 * np.sin(x) + theta3 * np.exp(x)
+	return theta1 + theta2 * np.exp(theta3*x)
 
 def residuals(p, y, x):
     return y - fun(p, x)
@@ -39,3 +40,10 @@ pl.plot(ytest, 'o',label=u"带噪声的数据")
 pl.plot(fun(plsq[0],x), label=u"拟合数据")
 pl.legend()
 pl.show()
+
+# def norm(x):
+# 	maxv = max(x)
+# 	minv = min(x)
+# 	return [(xx-minv)/float(maxv-minv) for xx in x]
+
+# print norm([1,3,4,6,10])

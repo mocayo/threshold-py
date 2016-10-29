@@ -58,13 +58,13 @@ def getCalculatedCompByTable(table='T_ZB_PL'):
 def getDataByPoint(point='C4-A22-PL-01', start='2016-07-01', end='2016-07-08'):
 	table = getTableByPoint(point)
 	comp = getCalculatedCompByTable(table)
-	print u'对应表格' , str(table)
-	print u'需要计算的分量', comp
+	# print u'对应表格' , str(table)
+	# print u'需要计算的分量', comp
 	sql = "SELECT DT," + comp + " FROM LCRiver_xwdh_2.dbo." + table + " "
 	sql += "WHERE INSTR_NO = '" + point + "' "
 	sql += "AND DT BETWEEN '" + start + "' AND '" + end + "'"
 	ms = MSSQL()
-	print sql
+	# print sql
 	resList = ms.ExecQuery(sql)
 	dt = [resList[i][0].strftime('%Y-%m-%d') for i in range(len(resList))]
 	val = [float(resList[i][1]) for i in range(len(resList))]
