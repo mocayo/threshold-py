@@ -70,9 +70,23 @@ def getDataByPoint(point='C4-A22-PL-01', start='2016-07-01', end='2016-07-08'):
 	val = [float(resList[i][1]) for i in range(len(resList))]
 	return dt, val
 
+def getDataByDay(point='C4-A22-PL-01', day='2016-07-01'):
+	table = getTableByPoint(point)
+	comp = getCalculatedCompByTable(table)
+	# print u'对应表格' , str(table)
+	# print u'需要计算的分量', comp
+	sql = "SELECT TOP 1 " + comp + " FROM LCRiver_xwdh_2.dbo." + table + " "
+	sql += "WHERE INSTR_NO = '" + point + "' "
+	sql += "AND CONVERT(VARCHAR(10),DT,120) = '" + day + "'"
+	ms = MSSQL()
+	# print sql
+	resList = ms.ExecQuery(sql)
+	return float(resList[0][0])
+
 def main():
 	# print getCalculatedCompByTable('T_ZB_UP')
-	print getDataByPoint()
+	# print getDataByPoint()
+	print getDataByDay()
 	# print getPointsByTable('T_ZB_IP')
 
 
