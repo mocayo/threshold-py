@@ -62,7 +62,8 @@ def getDataByPoint(point='C4-A22-PL-01', start='2016-07-01', end='2016-07-08'):
 	# print u'需要计算的分量', comp
 	sql = "SELECT DT," + comp + " FROM LCRiver_xwdh_2.dbo." + table + " "
 	sql += "WHERE INSTR_NO = '" + point + "' "
-	sql += "AND DT BETWEEN '" + start + "' AND '" + end + "'"
+	sql += "AND DT BETWEEN '" + start + "' AND '" + end + "' "
+	sql += "AND datename(Hour, DT)=8"
 	ms = MSSQL()
 	# print sql
 	resList = ms.ExecQuery(sql)
@@ -75,9 +76,10 @@ def getDataByDay(point='C4-A22-PL-01', day='2016-07-01'):
 	comp = getCalculatedCompByTable(table)
 	# print u'对应表格' , str(table)
 	# print u'需要计算的分量', comp
-	sql = "SELECT TOP 1 " + comp + " FROM LCRiver_xwdh_2.dbo." + table + " "
+	sql = "SELECT " + comp + " FROM LCRiver_xwdh_2.dbo." + table + " "
 	sql += "WHERE INSTR_NO = '" + point + "' "
 	sql += "AND CONVERT(VARCHAR(10),DT,120) = '" + day + "'"
+	sql += "AND datename(Hour, DT)=8"
 	ms = MSSQL()
 	# print sql
 	resList = ms.ExecQuery(sql)
