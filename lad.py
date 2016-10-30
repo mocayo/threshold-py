@@ -79,8 +79,10 @@ def fit(point = 'C4-A22-PL-01', day = '2016-07-16', delta = -15):
 	pl.legend(loc=0)
 	pl.show()
 
+	return predict
+
 if __name__ == '__main__':
-	fit(point='C4-A22-IP-01',day='2016-08-16')
+	print fit(point='C4-A22-IP-01',day='2016-08-16')
 	# d1 = datetime.datetime.strptime('2016-07-16', '%Y-%m-%d')
 	# print d1
 	# d2 = d1 + datetime.timedelta(days=-15)
