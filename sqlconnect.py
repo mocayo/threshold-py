@@ -17,7 +17,7 @@ class MSSQL:
         返回: conn.cursor()
         """
      
-        self.conn = pymssql.connect(host=self.host,user=self.user,password=self.pwd,timeout=5,login_timeout=2,charset="utf8")
+        self.conn = pymssql.connect(host=self.host,user=self.user,password=self.pwd,timeout=20,login_timeout=60,charset="utf8")
         cur = self.conn.cursor()
         if not cur:
             raise(NameError,"连接数据库失败")

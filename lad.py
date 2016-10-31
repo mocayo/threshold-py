@@ -22,8 +22,8 @@ pl.style.use('fivethirtyeight')
 def fun(p, x):
 	theta1, theta2, theta3 = p
 	# return theta1 + theta2 * np.sin(x) + theta3 * np.exp(x)
-	# return theta1 + theta2 * np.exp(theta3 * np.array(x))
-	return theta1 + theta2 * np.array(x) + theta3 * np.array(x) **2
+	return theta1 + theta2 * np.exp(theta3 * np.array(x))
+	# return theta1 + theta2 * np.array(x) + theta3 * np.array(x) **2
 
 def residuals(p, y, x):
     return y - fun(p, x)
@@ -67,11 +67,12 @@ def fit(point = 'C4-A22-PL-01', day = '2016-07-16', delta = -15):
 
 def fitday(day = '2016-04-01', point='C4-A22-IP-01', period=50):
 	res = []
+	t0 = time.clock()
 	dt,val = getdata.getDataByPoint(point=point, start=day, end=addDay(day,period))
-	print dt,val
 	for d in dt:
 		res.append(fit(point=point ,day=d))
 
+	print u'需要时间', time.clock() - t0
 	fig = pl.figure(figsize=(25, 20))
 	ax = fig.add_subplot(111)
 	# from matplotlib.ticker import MultipleLocator
@@ -90,6 +91,7 @@ def fitday(day = '2016-04-01', point='C4-A22-IP-01', period=50):
 
 	pl.plot(val,label=u"真实数据")
 	pl.plot(res,label=u"拟合数据")
+	pl.title(point)
 	pl.legend(loc=0)
 	pl.show()
 
@@ -101,5 +103,5 @@ if __name__ == '__main__':
 	# print d2
 	# print d2.strftime('%Y-%m-%d')
 	# print addDay()
-	fitday(day='2014-01-01', period=600)
+	fitday(day='2014-01-01',point='C4-A04-PL-01', period=600)
 	
