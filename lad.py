@@ -3,8 +3,10 @@
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as pl
+from matplotlib.ticker import MultipleLocator
 from scipy.optimize import leastsq
 import getdata
+import datetime
 from qhutil import *
 
 # 绘图设置
@@ -63,11 +65,24 @@ def fit(point = 'C4-A22-PL-01', day = '2016-07-16', delta = -15):
 def fitday(day = '2016-04-01', point='C4-A22-IP-01', period=50):
 	res = []
 	dt,val = getdata.getDataByPoint(point=point, start=day, end=addDay(day,period))
-	for i in range(period):
-		res.append(fit(point=point ,day=addDay(day, i)))
+	print dt,val
+	for d in dt:
+		res.append(fit(point=point ,day=d))
+
+	fig = pl.figure(figsize=(25, 20))
+	ax = fig.add_subplot(111)
+	xmajorLocator = MultipleLocator(4)
+	# xminorLocator = MultipleLocator(2) 
+	ax.xaxis.set_major_locator(xmajorLocator)
+	# ax.xaxis.set_minor_locator(xminorLocator)
+
+	# pl.xticks(range(len(dt)), dt)
+	
+	ax.set_xlabel(u'日期')
+	ax.set_ylabel(u'测值')
+
 	pl.plot(val,label=u"真实数据")
 	pl.plot(res,label=u"拟合数据")
-	pl.xticks(range(len(dt)), dt)
 	pl.legend(loc=0)
 	pl.show()
 
@@ -79,5 +94,5 @@ if __name__ == '__main__':
 	# print d2
 	# print d2.strftime('%Y-%m-%d')
 	# print addDay()
-	fitday(period=10)
+	fitday(period=60)
 	
