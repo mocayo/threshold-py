@@ -3,7 +3,6 @@
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as pl
-from matplotlib.ticker import MultipleLocator
 from scipy.optimize import leastsq
 import getdata
 import datetime
@@ -42,17 +41,21 @@ def fit(point = 'C4-A22-PL-01', day = '2016-07-16', delta = -15):
 	
 	yreal = val
 	p0 = np.random.rand(1,3)[0]
-	plsq = leastsq(residuals, p0, args=(yreal, x[:-1]))
+	try:
+		plsq = leastsq(residuals, p0, args=(yreal, x[:-1]))
+	except Exception:
+		return
+	ytest = fun(plsq[0],x[:-1])
 	predict = fun(plsq[0],x[-1])
 	# real = getdata.getDataByDay(point=point, day=day)
 	print '===================='
 	print 'day: ', day
 	print 'predict:', '%.4f' % predict
+	print 'rmse: ', '%.4f' % rmse(ytest, yreal)
 	# print 'realval:', real
 	# print 'aberror:', '%.4f' % np.abs(predict-real)
 	# print 'errrate:', '%.4f' % errrate(predict, real)
 	print '===================='
-	ytest = fun(plsq[0],x[:-1])
 	# print errrate(ytest, yreal)
 
 	# pl.plot(yreal, 'o', label=u"真实数据")
@@ -71,12 +74,16 @@ def fitday(day = '2016-04-01', point='C4-A22-IP-01', period=50):
 
 	fig = pl.figure(figsize=(25, 20))
 	ax = fig.add_subplot(111)
-	xmajorLocator = MultipleLocator(4)
+	# from matplotlib.ticker import MultipleLocator
+	# xmajorLocator = MultipleLocator(4)
 	# xminorLocator = MultipleLocator(2) 
-	ax.xaxis.set_major_locator(xmajorLocator)
+	# ax.xaxis.set_major_locator(xmajorLocator)
 	# ax.xaxis.set_minor_locator(xminorLocator)
 
-	# pl.xticks(range(len(dt)), dt)
+	xticks = range(0,len(dt),len(dt)/10+1)
+	xticklabels = [dt[i] for i in xticks]
+	ax.set_xticks(xticks)
+	ax.set_xticklabels(xticklabels, rotation=15)
 	
 	ax.set_xlabel(u'日期')
 	ax.set_ylabel(u'测值')
@@ -94,5 +101,5 @@ if __name__ == '__main__':
 	# print d2
 	# print d2.strftime('%Y-%m-%d')
 	# print addDay()
-	fitday(period=60)
+	fitday(day='2014-01-01', period=600)
 	
