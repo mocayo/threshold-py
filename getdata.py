@@ -63,7 +63,8 @@ def getDataByPoint(point='C4-A22-PL-01', start='2016-07-01', end='2016-07-08'):
 	sql = "SELECT DT," + comp + " FROM LCRiver_xwdh_2.dbo." + table + " "
 	sql += "WHERE INSTR_NO = '" + point + "' "
 	sql += "AND DT BETWEEN '" + start + "' AND '" + end + "' "
-	sql += "AND datename(Hour, DT)=8"
+	sql += "AND datename(Hour, DT)=8 "
+	sql += "ORDER BY DT"
 	ms = MSSQL()
 	# print sql
 	resList = ms.ExecQuery(sql)
@@ -71,6 +72,7 @@ def getDataByPoint(point='C4-A22-PL-01', start='2016-07-01', end='2016-07-08'):
 	val = [float(resList[i][1]) for i in range(len(resList))]
 	return dt, val
 
+# 获取制定日期测点需要计算分量的实测值
 def getDataByDay(point='C4-A22-PL-01', day='2016-07-01'):
 	table = getTableByPoint(point)
 	comp = getCalculatedCompByTable(table)
@@ -85,11 +87,21 @@ def getDataByDay(point='C4-A22-PL-01', day='2016-07-01'):
 	resList = ms.ExecQuery(sql)
 	return float(resList[0][0])
 
+# 获取水位数据
+def getWLByDay(day='2016-07-01'):
+	sql = "SELECT UPLEVEL FROM xwplat.dbo.B_HUBENV "
+	sql += "WHERE UPLEVELDT = '" + day + "'"
+	ms = MSSQL()
+	# print sql
+	resList = ms.ExecQuery(sql)
+	return resList[0][0]
+
 def main():
 	# print getCalculatedCompByTable('T_ZB_UP')
 	# print getDataByPoint()
-	print getDataByDay()
-	# print getPointsByTable('T_ZB_IP')
+	# print getDataByDay()
+	# print getPointsByTable('T_ZB_IP')\
+	print getWLByDay()
 
 
 if __name__ == '__main__':

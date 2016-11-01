@@ -1,28 +1,26 @@
 # -*- coding:utf-8 -*-
 
-import time
 from sklearn import linear_model
 import getdata
-
-# 时间字符串转为时间戳
-def getTimestampByStr(timestr):
-	return time.mktime(time.strptime(timestr, '%Y-%m-%d'))
-
-# 相对误差
-def errrate(y_test, y_true):
-	err = (abs(y_test-y_true))/y_true 
-	return ("%.4f" % err)
+import numpy as np
+from qhutil import *
 
 # 岭回归
-def ridge(x,y,dt='2016-07-08'):
-	clf = linear_model.Lasso(alpha = 0.6)
-	clf.fit(x, y)
-	clf.predict(getTimestampByStr(dt))
+def fit(point = 'C4-A22-PL-01', day = '2016-07-16', delta = -15):
+	start = addDay(day=day, delta=delta)
+	end = day
 
-def test():
-	x, y = getdata.getDataByPoint()
-	print [getTimestampByStr(x[i]) for i in range(len(x))]
-	# ridge([getTimestampByStr(x[i]) for i in range(len(x))], y)
+	dt,val = getdata.getDataByPoint(point=point, start=start, end=end)
+	dt.append(day)
+	x = [getTimestampByStr(d) for d in dt]
+	x = np.array(norm(x))
+
+	fitdatas = [[x[i],val[i]] for i in range(len(val))]
+	# print fitdatas
+
+	clf = linear_model.Lasso(alpha = 0.6)
+	clf.fit(fitdatas)
+	print clf.predict(x[-1])
 
 if __name__ == '__main__':
-	test()
+	fit()

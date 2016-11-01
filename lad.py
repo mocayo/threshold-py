@@ -68,11 +68,14 @@ def fit(point = 'C4-A22-PL-01', day = '2016-07-16', delta = -15):
 def fitday(day = '2016-04-01', point='C4-A22-IP-01', period=50):
 	res = []
 	t0 = time.clock()
-	dt,val = getdata.getDataByPoint(point=point, start=day, end=addDay(day,period))
+	try:
+		dt,val = getdata.getDataByPoint(point=point, start=day, end=addDay(day,period))
+	except:
+		return
 	for d in dt:
 		res.append(fit(point=point ,day=d))
+	print u'需要时间','%.4f' % (time.clock() - t0), 's'
 
-	print u'需要时间', time.clock() - t0
 	fig = pl.figure(figsize=(25, 20))
 	ax = fig.add_subplot(111)
 	# from matplotlib.ticker import MultipleLocator
@@ -80,15 +83,12 @@ def fitday(day = '2016-04-01', point='C4-A22-IP-01', period=50):
 	# xminorLocator = MultipleLocator(2) 
 	# ax.xaxis.set_major_locator(xmajorLocator)
 	# ax.xaxis.set_minor_locator(xminorLocator)
-
 	xticks = range(0,len(dt),len(dt)/10+1)
 	xticklabels = [dt[i] for i in xticks]
 	ax.set_xticks(xticks)
 	ax.set_xticklabels(xticklabels, rotation=15)
-	
 	ax.set_xlabel(u'日期')
 	ax.set_ylabel(u'测值')
-
 	pl.plot(val,label=u"真实数据")
 	pl.plot(res,label=u"拟合数据")
 	pl.title(point)
@@ -103,5 +103,5 @@ if __name__ == '__main__':
 	# print d2
 	# print d2.strftime('%Y-%m-%d')
 	# print addDay()
-	fitday(day='2014-01-01',point='C4-A04-PL-01', period=600)
+	fitday(day='2014-01-01',point='C4-A04-PL-01', period=1200)
 	
