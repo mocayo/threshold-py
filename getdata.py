@@ -72,7 +72,7 @@ def getDataByPoint(point='C4-A22-PL-01', start='2016-07-01', end='2016-07-08'):
 	val = [float(resList[i][1]) for i in range(len(resList))]
 	return dt, val
 
-# 获取制定日期测点需要计算分量的实测值
+# 获取指定日期测点需要计算分量的实测值
 def getDataByDay(point='C4-A22-PL-01', day='2016-07-01'):
 	table = getTableByPoint(point)
 	comp = getCalculatedCompByTable(table)
