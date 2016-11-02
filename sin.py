@@ -19,10 +19,6 @@ mpl.rc('ytick', labelsize=16)
 # 设置绘图风格
 plt.style.use('fivethirtyeight')
 
-# 时间字符串转为时间戳
-def getTimestampByStr(timestr):
-	return time.mktime(time.strptime(timestr, '%Y-%m-%d'))
-
 def fun(x, theta1, theta2):
 	# theta1, theta2 = p
 	return theta1 + theta2*np.sin(x)
@@ -65,7 +61,7 @@ def fit(point = 'C4-A22-PL-01', day = '2016-07-16', delta = -7):
 	# plt.show()
 	return predict
 
-def fitday(day = '2016-04-01', point='C4-A22-IP-01', period=50):
+def fitday(day='2016-04-01', point='C4-A22-IP-01', period=50):
 	res = []
 	t0 = time.clock()
 	try:

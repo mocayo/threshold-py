@@ -45,13 +45,12 @@ def fit(point = 'C4-A22-PL-01', day = '2016-07-16', delta = -15):
 		plsq = leastsq(residuals, p0, args=(yreal, x[:-1]))
 	except Exception:
 		return
-	ytest = fun(plsq[0],x[:-1])
 	predict = fun(plsq[0],x[-1])
 	# real = getdata.getDataByDay(point=point, day=day)
 	print '===================='
 	print 'day: ', day
 	print 'predict:', '%.4f' % predict
-	print 'rmse: ', '%.4f' % rmse(ytest, yreal)
+	print 'rmse: ', '%.4f' % rmse(predict, yreal)
 	# print 'realval:', real
 	# print 'aberror:', '%.4f' % np.abs(predict-real)
 	# print 'errrate:', '%.4f' % errrate(predict, real)
@@ -103,5 +102,5 @@ if __name__ == '__main__':
 	# print d2
 	# print d2.strftime('%Y-%m-%d')
 	# print addDay()
-	fitday(day='2014-01-01',point='C4-A04-PL-01', period=1200)
+	fitday(day='2016-03-01',point='C4-A22-PL-01', period=60)
 	
