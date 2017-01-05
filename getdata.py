@@ -100,7 +100,7 @@ def main():
 	# print getCalculatedCompByTable('T_ZB_UP')
 	# print getDataByPoint()
 	# print getDataByDay()
-	# print getPointsByTable('T_ZB_IP')\
+	# print getPointsByTable('T_ZB_IP')
 	print getWLByDay()
 
 
