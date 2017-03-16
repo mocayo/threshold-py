@@ -1,7 +1,11 @@
-#coding=utf-8 
-
+# -*- coding: UTF-8 -*-
 import pymssql
 import ConfigParser
+import sys
+
+#设置系统默认编码为UTF-8
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 class MSSQL:
     def __init__(self):
@@ -14,25 +18,30 @@ class MSSQL:
     def __GetConnect(self):
         """
         得到连接信息
+        timeout：查询超时
+        cursor():返回游标对象，用于查询和返回数据
+
         返回: conn.cursor()
+
         """
-     
         self.conn = pymssql.connect(host=self.host,user=self.user,password=self.pwd,timeout=20,login_timeout=60,charset="utf8")
         cur = self.conn.cursor()
         if not cur:
+            cur.execute('SET NAMES UTF8')
             raise(NameError,"连接数据库失败")
         else:
             return cur
 
     ##验证数据库连接
     def VerifyConnection(self):
-        try:
-            if self.host=='':
-                return False
-            conn = pymssql.connect(host=self.host,user=self.user,password=self.pwd,database=self.db,timeout=1,login_timeout=1,charset="utf8")
-            return True
-        except:
-            return False
+        #try:
+        if self.host=='':
+            return 'null'
+        #,database=self.db
+        conn = pymssql.connect(host=self.host,user=self.user,password=self.pwd,timeout=1,login_timeout=1,charset="utf8")
+        return True
+        #except:
+        #return False
 
     def ExecQuery(self,sql):
         """
@@ -47,6 +56,9 @@ class MSSQL:
         """
         cur = self.__GetConnect()
         cur.execute(sql)
+        """
+        fetchall():读取所有行
+        """
         resList = cur.fetchall()
         #resList = cur.description
         #查询完毕后必须关闭连接
@@ -88,8 +100,9 @@ class MSSQL:
 
 
 def main():
-	ms = MSSQL()
-	print ms.ExecQuery("SELECT * FROM [Citrix].[dbo].[user]")
+    ms = MSSQL()
+    print ms.VerifyConnection()
+	#print ms.ExecQuery("SELECT * FROM [Citrix].[dbo].[user]")
 
 if __name__ == '__main__':
     main()

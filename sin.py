@@ -64,12 +64,15 @@ def fit(point = 'C4-A22-PL-01', day = '2016-07-16', delta = -7):
 def fitday(day='2016-04-01', point='C4-A22-IP-01', period=50):
 	res = []
 	t0 = time.clock()
-	try:
-		dt,val = getdata.getDataByPoint(point=point, start=day, end=addDay(day,period))
-		for d in dt:
-			res.append(fit(point=point ,day=d))
-	except:
-		return
+	# try:
+	# 	dt,val = getdata.getDataByPoint(point=point, start=day, end=addDay(day,period))
+	# 	for d in dt:
+	# 		res.append(fit(point=point ,day=d))
+	# except:
+	# 	return
+	dt,val = getdata.getDataByPoint(point=point, start=day, end=addDay(day,period))
+	for d in dt:
+		res.append(fit(point=point ,day=d))
 	print u'需要时间','%.4f' % (time.clock() - t0), 's'
 
 	fig = plt.figure(figsize=(25, 20))

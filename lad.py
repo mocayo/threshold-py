@@ -102,5 +102,5 @@ if __name__ == '__main__':
 	# print d2
 	# print d2.strftime('%Y-%m-%d')
 	# print addDay()
-	fitday(day='2016-03-01',point='C4-A22-PL-01', period=60)
+	fitday(day='2016-03-01',point='C4-A22-PL-01', period=120)
 	

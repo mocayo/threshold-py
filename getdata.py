@@ -1,30 +1,38 @@
-#coding=utf-8
+# -*- coding: UTF-8 -*-
 
 import pickle
 
 from sqlconnect import MSSQL
 
+# 获取所有的测点
+def getAllPoints():
+	sql = "SELECT DISTINCT DesignCode FROM LCRiver_xwdh_1.dbo.DefInsSort"
+	ms = MSSQL()
+	resList = ms.ExecQuery(sql)
+	return [str(res[0]).strip() for res in resList]
+
 # 获取所有的表名
-def  getAllTable():
+def getAllTable():
 	sql = "SELECT [table] FROM LCRiver_xwdh_1.dbo.DefTableType"
 	ms = MSSQL()
 	resList = ms.ExecQuery(sql)
+	#strip()消除空格
 	return [str(res[0]).strip() for res in resList]
 
 # 根据测点返回对应表名	
 def getTableByPoint(point='C4-A29-PL-01'):
 	sql = "SELECT [table] FROM	LCRiver_xwdh_1.dbo.DefTableType "
 	sql += "WHERE [type] IN (SELECT [type] FROM LCRiver_xwdh_1.dbo.DefInsSort "
-	sql += "WHERE [DesignCode] = '" + point.strip() + "')"
+	sql += "WHERE [DesignCode] = '" + point + "')"
 	ms = MSSQL()
 	resList =  ms.ExecQuery(sql)
-	return "".join(resList[0]).strip()
+	return str(resList[0][0]).strip()
+	#return "".join(resList[0]).strip()
 
 # 根据表名获取分量
 def getCompByTable(table='T_ZB_PL'):
 	sql = "SELECT R1,R2,R3 FROM LCRiver_xwdh_1.dbo.MonitorItemType "
 	sql += "WHERE TABLE_NAME = '" + table.strip() + "'"
-
 	ms = MSSQL()
 	resList = ms.ExecQuery(sql)
 	return resList[0]
@@ -56,8 +64,12 @@ def getCalculatedCompByTable(table='T_ZB_PL'):
 
 # 根据测点获取数据
 def getDataByPoint(point='C4-A22-PL-01', start='2016-07-01', end='2016-07-08'):
+	dt = []
+	val = []
 	table = getTableByPoint(point)
+	# print table
 	comp = getCalculatedCompByTable(table)
+	# print comp
 	# print u'对应表格' , str(table)
 	# print u'需要计算的分量', comp
 	sql = "SELECT DT," + comp + " FROM LCRiver_xwdh_2.dbo." + table + " "
@@ -68,8 +80,14 @@ def getDataByPoint(point='C4-A22-PL-01', start='2016-07-01', end='2016-07-08'):
 	ms = MSSQL()
 	# print sql
 	resList = ms.ExecQuery(sql)
-	dt = [resList[i][0].strftime('%Y-%m-%d') for i in range(len(resList))]
-	val = [float(resList[i][1]) for i in range(len(resList))]
+	# print resList
+	for i in range(len(resList)):
+		if resList[i][1] is None:
+			dt.append(resList[i][0].strftime('%Y-%m-%d'))
+			val.append(None)
+		else:
+			dt.append(resList[i][0].strftime('%Y-%m-%d'))
+			val.append(float(resList[i][1]))
 	return dt, val
 
 # 获取指定日期测点需要计算分量的实测值
@@ -98,11 +116,13 @@ def getWLByDay(day='2016-07-01'):
 
 def main():
 	# print getCalculatedCompByTable('T_ZB_UP')
-	# print getDataByPoint()
+	# print getDataByPoint(point='A22-T1005-PJ',start='2016-12-27', end='2017-01-10')
 	# print getDataByDay()
 	# print getPointsByTable('T_ZB_IP')
-	print getWLByDay()
-
+	print getTableByPoint("C6B-DCL-Ⅲ'-C-01")
+	# print getAllTable()
+	# print getWLByDay()b
+	# print getAllPoints()
 
 if __name__ == '__main__':
-	main()
+	main()	

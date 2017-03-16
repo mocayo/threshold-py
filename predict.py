@@ -73,4 +73,4 @@ def fitday(day = '2016-04-01', point='C4-A22-IP-01', period=15):
 	pl.show()
 
 if __name__ == '__main__':
-	fitday(day='2015-07-01')
+	fitday(day='2014-07-01', period=35)
